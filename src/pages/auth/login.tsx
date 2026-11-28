@@ -7,13 +7,19 @@ import { Input } from '../../components/input'
 import { Logo } from '../../components/logo'
 import { useState, type SubmitEvent } from 'react'
 import { useAuth } from '../../auth/context'
+import { useToast } from '../../toast/context'
 
 export function LoginPage() {
-    const { login } = useAuth();
+    const auth = useAuth();
     const navigate = useNavigate();
     
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    const toast = useToast()
+
+    if (!auth) throw new Error('LoginPage requires AuthProvider')
+    const { login } = auth
 
     async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -29,7 +35,9 @@ export function LoginPage() {
             await login(email, password)
             navigate('/books', {replace: true})
         } catch {
-            setError('Inloggen mislukt. Controleer je gegevens.')
+            setError('ohnee error')
+
+            toast.error('Inloggen is mislukt.', 'Controleer je e-mailadres en wachtwoord en probeer het opnieuw.')
         } finally {
             setLoading(false)
         }
@@ -72,6 +80,7 @@ export function LoginPage() {
                 type="email"
                 autoComplete="username"
                 placeholder="admin@admin.com"
+                invalid={Boolean(error)}
                 required
                 />
                 <Input
@@ -80,6 +89,7 @@ export function LoginPage() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                invalid={Boolean(error)}
                 required
                 />
                 <Button type="submit" className="w-full justify-center text-sm" disabled={loading}>

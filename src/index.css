@@ -31,6 +31,23 @@
   /* Radius: alleen rounded-xl (12px) en rounded-full, Tailwind defaults */
   --shadow-hard-sm: 2px 2px 0 var(--color-ink);
   --shadow-hard: 4px 4px 0 var(--color-ink);
+
+  --animate-toast-in: toast-in 250ms ease-out backwards;
+  --animate-toast-out: toast-out 200ms ease-in forwards;
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(100% + 1.5rem));
+    }
+  }
+
+  @keyframes toast-out {
+    to {
+      opacity: 0;
+      transform: translateY(calc(100% + 1.5rem));
+    }
+  }
 }
 
 body { @apply bg-canvas text-ink font-sans antialiased; }
